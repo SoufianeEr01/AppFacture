@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "149837846174",
+    "project_id": "factureauth",
+    "storage_bucket": "factureauth.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149837846174:android:0e6f03e013bf109206cd8f",
+        "android_client_info": {
+          "package_name": "com.example.facture_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkogp7jod_qTHT2kwJKyh4_tECEQyFkBk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
