@@ -212,26 +212,126 @@ class _ClientScreenState extends State<ClientScreen> {
                   return const Center(child: Text('Aucun client trouvé'));
                 }
 
-                return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
                   itemCount: filtered.length,
-                  separatorBuilder: (_, __) => const Divider(height: 12),
                   itemBuilder: (context, index) {
                     final client = filtered[index];
-                    return ListTile(
-                      leading: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.blue.shade300,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(Icons.person, color: Colors.white, size: 28),
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                        border: Border.all(color: Colors.grey.shade200),
                       ),
-                      title: Text(client.nom, maxLines: 1, overflow: TextOverflow.ellipsis),
-                      subtitle: Text(client.email, maxLines: 1, overflow: TextOverflow.ellipsis),
-                      trailing: Text('ICE: ${client.ice}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                      onTap: () => _showClientDetails(client),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16),
+                        leading: Container(
+                          width: 56,
+                          height: 56,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.blue.shade400, Colors.blue.shade600],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.blue.withOpacity(0.3),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.person,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                        ),
+                        title: Text(
+                          client.nom,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF1E293B),
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Icon(Icons.email_outlined, size: 16, color: Colors.grey.shade600),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    client.email,
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 14,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.orange.shade100,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(Icons.business, size: 12, color: Colors.orange.shade700),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        'ICE: ${client.ice}',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.orange.shade700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        trailing: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                        onTap: () => _showClientDetails(client),
+                      ),
                     );
                   },
                 );

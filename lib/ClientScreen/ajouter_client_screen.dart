@@ -225,7 +225,7 @@ class _AjoutClientScreenState extends State<AjoutClientScreen> with TickerProvid
                       _buildTextField(
                         'Nom du client *',
                         _nomController,
-                        hint: 'Ex: Dupont',
+                        hint: 'Ex: Société XYZ',
                         icon: Icons.person_outline,
                         validator: (v) {
                           if (v == null || v.trim().isEmpty) {

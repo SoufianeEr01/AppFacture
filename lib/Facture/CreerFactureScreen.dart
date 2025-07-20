@@ -376,7 +376,7 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
   }
 
   Future<void> validerFacture() async {
-    print("🔵 Début de validerFacture");
+    print("Début de validerFacture");
     
     if (clientSelectionne == null || lignesFacture.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
@@ -385,19 +385,19 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
       return;
     }
 
-    print("🔵 Validation OK, début du traitement");
+    print("Validation OK, début du traitement");
     setState(() => isLoading = true);
 
     try {
-      print("🔵 Récupération du numéro de facture...");
+      print("Récupération du numéro de facture...");
       final numero = await _factureService.getNextFactureNumber();
-      print("🔵 Numéro récupéré : $numero");
+      print("Numéro récupéré : $numero");
       
-      print("🔵 Création de l'objet Facture...");
-      print("🔵 clientSelectionne: $clientSelectionne");
-      print("🔵 lignesFacture: $lignesFacture");
-      print("🔵 totalHT: $totalHT");
-      print("🔵 totalTTC: $totalTTC");
+      print("Création de l'objet Facture...");
+      print("clientSelectionne: $clientSelectionne");
+      print("lignesFacture: $lignesFacture");
+      print("totalHT: $totalHT");
+      print("totalTTC: $totalTTC");
       
       final facture = Facture(
         id: '',
@@ -412,7 +412,7 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
         numero: numero,
         pdfUrl: null,
       );
-      print("🔵 Objet Facture créé avec succès");
+      print("Objet Facture créé avec succès");
 
       setState(() => isLoading = false);
 

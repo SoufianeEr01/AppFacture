@@ -25,7 +25,7 @@ class _ApercuFactureScreenState extends State<ApercuFactureScreen> {
       setState(() => isLoading = false);
 
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Facture enregistrée avec succès 🎉\n$url'),
+        content: Text('Facture enregistrée avec succès \n$url'),
         backgroundColor: Colors.green,
       ));
 
