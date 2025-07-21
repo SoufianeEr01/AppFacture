@@ -46,11 +46,13 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
     });
   }
 
+  // Méthode corrigée pour ajouter un produit avec la référence
   void ajouterProduit(Map<String, dynamic> produit) {
     setState(() {
       lignesFacture.add(LigneFacture(
         produitId: produit['id'].toString(),
         nomProduit: produit['nom'],
+        reference: produit['reference'] ?? '', // Ajouter la référence
         prixHT: (produit['prixHT'] as num).toDouble(),
         quantite: 1,
       ));
@@ -341,6 +343,23 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
                                           ),
                                         ),
                                         const SizedBox(height: 4),
+                                        // Afficher la référence
+                                        if (produit['reference'] != null && produit['reference'].isNotEmpty)
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey.shade100,
+                                              borderRadius: BorderRadius.circular(4),
+                                            ),
+                                            child: Text(
+                                              'Réf: ${produit['reference']}',
+                                              style: const TextStyle(
+                                                fontSize: 11,
+                                                color: Color(0xFF7F8C8D),
+                                              ),
+                                            ),
+                                          ),
+                                        const SizedBox(height: 4),
                                         Text(
                                           '${produit['prixHT']} MAD HT',
                                           style: const TextStyle(
@@ -394,10 +413,6 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
       print("Numéro récupéré : $numero");
       
       print("Création de l'objet Facture...");
-      print("clientSelectionne: $clientSelectionne");
-      print("lignesFacture: $lignesFacture");
-      print("totalHT: $totalHT");
-      print("totalTTC: $totalTTC");
       
       final facture = Facture(
         id: '',
@@ -424,10 +439,7 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
         ),
       );
 
-      // Si l'utilisateur a confirmé l'enregistrement, l'aperçu s'occupe de fermer les écrans
-      // Sinon on ne fait rien, l'utilisateur reste sur l'écran de création
       if (result == false) {
-        // L'utilisateur a annulé, on peut optionnellement afficher un message
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
           content: Text('Création de facture annulée'),
           backgroundColor: Colors.orange,
@@ -436,7 +448,6 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
     } catch (e) {
       setState(() => isLoading = false);
       print("❌ ERREUR COMPLÈTE : $e");
-      print("❌ TYPE D'ERREUR : ${e.runtimeType}");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Erreur lors de la création de la facture :\n$e')),
       );
@@ -454,7 +465,6 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
           style: TextStyle(
             fontWeight: FontWeight.w600,
             color: Color.fromARGB(255, 255, 255, 255),
-            
           ),
         ),
         centerTitle: true,
@@ -516,7 +526,7 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
                       ),
                       constraints: const BoxConstraints(
                         minHeight: 100,
-                        maxHeight: 300, // Limite la hauteur pour éviter l'overflow
+                        maxHeight: 300,
                       ),
                       child: lignesFacture.isEmpty
                           ? const Center(
@@ -542,64 +552,104 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
                                 final ligne = lignesFacture[index];
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(vertical: 8),
-                                  child: Row(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          ligne.nomProduit,
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Color(0xFF2C3E50),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: TextFormField(
-                                          initialValue: ligne.prixHT.toStringAsFixed(2),
-                                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                                          style: const TextStyle(fontSize: 14),
-                                          decoration: const InputDecoration(
-                                            labelText: 'Prix',
-                                            labelStyle: TextStyle(color: Color(0xFF95A5A6), fontSize: 12),
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xFFE0E0E0)),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xFF2C3E50)),
-                                            ),
-                                          ),
-                                          onChanged: (val) => modifierPrix(index, val),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        flex: 2,
-                                        child: TextFormField(
-                                          initialValue: ligne.quantite.toString(),
-                                          keyboardType: TextInputType.number,
-                                          style: const TextStyle(fontSize: 14),
-                                          decoration: const InputDecoration(
-                                            labelText: 'Qté',
-                                            labelStyle: TextStyle(color: Color(0xFF95A5A6), fontSize: 12),
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                            border: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xFFE0E0E0)),
-                                            ),
-                                            focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide(color: Color(0xFF2C3E50)),
+                                      // Nom du produit et référence
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  ligne.nomProduit,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xFF2C3E50),
+                                                  ),
+                                                ),
+                                                const SizedBox(height: 4),
+                                                // Afficher la référence si elle existe
+                                                if (ligne.reference.isNotEmpty)
+                                                  Container(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.grey.shade100,
+                                                      borderRadius: BorderRadius.circular(4),
+                                                    ),
+                                                    child: Text(
+                                                      'Réf: ${ligne.reference}',
+                                                      style: const TextStyle(
+                                                        fontSize: 11,
+                                                        color: Color(0xFF7F8C8D),
+                                                      ),
+                                                    ),
+                                                  ),
+                                              ],
                                             ),
                                           ),
-                                          onChanged: (val) => modifierQuantite(index, val),
-                                        ),
+                                          IconButton(
+                                            icon: const Icon(Icons.close, color: Color(0xFF95A5A6), size: 20),
+                                            onPressed: () => supprimerLigne(index),
+                                          ),
+                                        ],
                                       ),
-                                      const SizedBox(width: 8),
-                                      IconButton(
-                                        icon: const Icon(Icons.close, color: Color(0xFF95A5A6), size: 20),
-                                        onPressed: () => supprimerLigne(index),
-                                      )
+                                      const SizedBox(height: 8),
+                                      // Prix et quantité
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 2,
+                                            child: TextFormField(
+                                              initialValue: ligne.prixHT.toStringAsFixed(2),
+                                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                              style: const TextStyle(fontSize: 14),
+                                              decoration: const InputDecoration(
+                                                labelText: 'Prix',
+                                                labelStyle: TextStyle(color: Color(0xFF95A5A6), fontSize: 12),
+                                                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Color(0xFFE0E0E0)),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Color(0xFF2C3E50)),
+                                                ),
+                                              ),
+                                              onChanged: (val) => modifierPrix(index, val),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            flex: 2,
+                                            child: TextFormField(
+                                              initialValue: ligne.quantite.toString(),
+                                              keyboardType: TextInputType.number,
+                                              style: const TextStyle(fontSize: 14),
+                                              decoration: const InputDecoration(
+                                                labelText: 'Qté',
+                                                labelStyle: TextStyle(color: Color(0xFF95A5A6), fontSize: 12),
+                                                contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                                border: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Color(0xFFE0E0E0)),
+                                                ),
+                                                focusedBorder: OutlineInputBorder(
+                                                  borderSide: BorderSide(color: Color(0xFF2C3E50)),
+                                                ),
+                                              ),
+                                              onChanged: (val) => modifierQuantite(index, val),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Text(
+                                            '${ligne.totalLigne.toStringAsFixed(2)} MAD',
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              color: Color(0xFF2C3E50),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                 );
@@ -726,7 +776,6 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-
                           ),
                         ),
                       ),

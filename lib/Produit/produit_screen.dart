@@ -49,12 +49,13 @@ class _ProduitScreenState extends State<ProduitScreen> {
     _searchFocusNode.unfocus();
   }
 
-  // Ajouter cette méthode pour filtrer les produits
+  // Mettre à jour la méthode _filteredProduits pour inclure la recherche par référence
   List<Produit> get _filteredProduits {
     if (_searchText.isEmpty) return _allProduits;
     return _allProduits.where((p) =>
       p.nom.toLowerCase().contains(_searchText.toLowerCase()) ||
-      p.description.toLowerCase().contains(_searchText.toLowerCase())
+      p.description.toLowerCase().contains(_searchText.toLowerCase()) ||
+      p.reference.toLowerCase().contains(_searchText.toLowerCase()) // Ajouter la recherche par référence
     ).toList();
   }
 
@@ -94,11 +95,34 @@ class _ProduitScreenState extends State<ProduitScreen> {
                     ),
                     const SizedBox(width: 15),
                     Expanded(
-                      child: Text(
-                        produit.nom,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            produit.nom,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black87),
+                          ),
+                          const SizedBox(height: 4),
+                          // Afficher la référence sous le nom
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(6),
+                              border: Border.all(color: Colors.grey.shade300),
+                            ),
+                            child: Text(
+                              'Réf: ${produit.reference}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey.shade700,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     IconButton(
@@ -663,6 +687,7 @@ class _ProduitScreenState extends State<ProduitScreen> {
     );
   }
 
+  // Mettre à jour la méthode _buildSearchResults pour afficher la référence dans la liste
   Widget _buildSearchResults(List<Produit> filteredProduits) {
     return Column(
       children: [
@@ -766,7 +791,27 @@ class _ProduitScreenState extends State<ProduitScreen> {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
+                            const SizedBox(height: 6),
+                            
+                            // Afficher la référence
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(6),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: Text(
+                                'Réf: ${produit.reference}',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.grey.shade700,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ),
                             const SizedBox(height: 8),
+                            
                             Container(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 8,

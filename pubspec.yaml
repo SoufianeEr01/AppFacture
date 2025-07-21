@@ -47,6 +47,9 @@ dependencies:
   csv: ^6.0.0
   excel: ^4.0.3
 
+  mobile_scanner: ^3.5.6
+  permission_handler: ^11.0.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

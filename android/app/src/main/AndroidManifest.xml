@@ -12,6 +12,9 @@
     <!-- Permission Internet pour Google Drive -->
     <uses-permission android:name="android.permission.INTERNET" />
     
+    <!-- Permission pour la caméra -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    
     <application
         android:label="facture_app"
         android:name="${applicationName}"

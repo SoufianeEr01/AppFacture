@@ -81,20 +81,34 @@ class ImportExportService {
       try {
         final row = rows[i];
         
-        // Vérifier que la ligne a au moins 2 colonnes (nom et prix)
-        if (row.length < 2) {
-          erreurs.add('Ligne ${i + 1}: Données insuffisantes');
+        // Vérifier que la ligne a au moins 3 colonnes (nom, référence, prix)
+        if (row.length < 3) {
+          erreurs.add('Ligne ${i + 1}: Données insuffisantes (nom, référence, prix requis)');
           continue;
         }
 
-        // Extraire les données
+        // Extraire les données selon le nouveau format
         final nom = row[0]?.toString().trim() ?? '';
-        final prixString = row[1]?.toString().trim() ?? '';
-        final description = row.length > 2 ? row[2]?.toString().trim() ?? '' : '';
+        final reference = row[1]?.toString().trim() ?? '';
+        final prixString = row[2]?.toString().trim() ?? '';
+        final description = row.length > 3 ? row[3]?.toString().trim() ?? '' : '';
 
         // Valider les données
         if (nom.isEmpty) {
           erreurs.add('Ligne ${i + 1}: Nom du produit manquant');
+          continue;
+        }
+
+        if (reference.isEmpty) {
+          erreurs.add('Ligne ${i + 1}: Référence du produit manquante');
+          continue;
+        }
+
+        // Vérifier l'unicité de la référence
+        final produits = await _produitService.obtenirTousLesProduits();
+        final referenceExists = produits.any((p) => p.reference.toLowerCase() == reference.toLowerCase());
+        if (referenceExists) {
+          erreurs.add('Ligne ${i + 1}: Référence "$reference" déjà existante');
           continue;
         }
 
@@ -115,6 +129,7 @@ class ImportExportService {
         final produit = Produit(
           id: const Uuid().v4(),
           nom: nom,
+          reference: reference, // Utiliser la référence fournie
           description: description,
           prixHT: prix,
         );
@@ -142,11 +157,14 @@ class ImportExportService {
     
     final premiereValeur = premiereLigne[0]?.toString().toLowerCase() ?? '';
     final deuxiemeValeur = premiereLigne.length > 1 ? premiereLigne[1]?.toString().toLowerCase() ?? '' : '';
+    final troisiemeValeur = premiereLigne.length > 2 ? premiereLigne[2]?.toString().toLowerCase() ?? '' : '';
     
     return premiereValeur.contains('nom') || 
            premiereValeur.contains('produit') ||
-           deuxiemeValeur.contains('prix') ||
-           deuxiemeValeur.contains('price');
+           deuxiemeValeur.contains('ref') ||
+           deuxiemeValeur.contains('référence') ||
+           troisiemeValeur.contains('prix') ||
+           troisiemeValeur.contains('price');
   }
 
   // Générer le message de résultat
@@ -175,14 +193,15 @@ class ImportExportService {
         };
       }
 
-      // Préparer les données CSV
+      // Préparer les données CSV avec la référence
       List<List<dynamic>> rows = [
-        ['Nom', 'Prix HT (DH)', 'Description'], // En-tête
+        ['Nom', 'Référence', 'Prix HT (DH)', 'Description'], // En-tête mis à jour
       ];
 
       for (final produit in produits) {
         rows.add([
           produit.nom,
+          produit.reference, // Ajouter la référence
           produit.prixHT.toStringAsFixed(2),
           produit.description,
         ]);
@@ -238,9 +257,10 @@ class ImportExportService {
       // Supprimer la feuille par défaut
       excel.delete('Sheet1');
 
-      // Ajouter l'en-tête
+      // Ajouter l'en-tête avec la référence
       sheet.appendRow([
         TextCellValue('Nom'),
+        TextCellValue('Référence'), // Ajouter la référence
         TextCellValue('Prix HT (DH)'),
         TextCellValue('Description'),
       ]);
@@ -249,6 +269,7 @@ class ImportExportService {
       for (final produit in produits) {
         sheet.appendRow([
           TextCellValue(produit.nom),
+          TextCellValue(produit.reference), // Ajouter la référence
           DoubleCellValue(produit.prixHT),
           TextCellValue(produit.description),
         ]);
@@ -293,12 +314,12 @@ class ImportExportService {
   // Télécharger un modèle CSV
   Future<Map<String, dynamic>> telechargerModeleCSV() async {
     try {
-      // Créer un fichier modèle
+      // Créer un fichier modèle avec la référence
       List<List<dynamic>> rows = [
-        ['Nom', 'Prix HT (DH)', 'Description'],
-        ['Exemple Produit 1', '25.50', 'Description du produit 1'],
-        ['Exemple Produit 2', '45.00', 'Description du produit 2'],
-        ['Exemple Produit 3', '12.75', ''], // Description optionnelle
+        ['Nom', 'Référence', 'Prix HT (DH)', 'Description'], // Ordre mis à jour
+        ['Exemple Produit 1', 'REF-001', '25.50', 'Description du produit 1'],
+        ['Exemple Produit 2', 'REF-002', '45.00', 'Description du produit 2'],
+        ['Exemple Produit 3', 'REF-003', '12.75', ''], // Description optionnelle
       ];
 
       final csvData = const ListToCsvConverter().convert(rows);

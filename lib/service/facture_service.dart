@@ -72,7 +72,7 @@ class FactureService {
 
   Future<File> generatePdf(Facture facture) async {
     final pdf = pw.Document();
-    final logoBytes = await rootBundle.load('assets/logo.png');//image facture
+    final logoBytes = await rootBundle.load('assets/logo.png');
     final logoImage = pw.MemoryImage(logoBytes.buffer.asUint8List());
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/facture_${facture.numero}.pdf');
@@ -127,16 +127,32 @@ class FactureService {
                 ],
               ),
               pw.SizedBox(height: 24),
+              
+              // Tableau modifié avec la référence
               pw.Table.fromTextArray(
-                headers: ['Produit', 'Prix HT', 'Quantité', 'Total'],
+                headers: ['Produit','Référence', 'Prix HT', 'Quantité', 'Total HT'],
                 data: facture.lignes.map((l) => [
+                   // Utiliser la référence de la ligne
                   l.nomProduit,
+                  l.reference,
                   '${l.prixHT.toStringAsFixed(2)} MAD',
                   '${l.quantite}',
                   '${l.totalLigne.toStringAsFixed(2)} MAD',
                 ]).toList(),
                 headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                 border: pw.TableBorder.all(),
+                cellStyle: const pw.TextStyle(fontSize: 10),
+                headerDecoration: pw.BoxDecoration(
+                  color: PdfColors.grey200,
+                ),
+                cellAlignment: pw.Alignment.centerLeft,
+                columnWidths: {
+                  0: const pw.FlexColumnWidth(1.5), // Référence
+                  1: const pw.FlexColumnWidth(3),   // Produit
+                  2: const pw.FlexColumnWidth(1.5), // Prix HT
+                  3: const pw.FlexColumnWidth(1),   // Quantité
+                  4: const pw.FlexColumnWidth(1.5), // Total HT
+                },
               ),
               pw.SizedBox(height: 20),
               pw.Row(
@@ -147,7 +163,8 @@ class FactureService {
                     children: [
                       pw.Text('Total HT : ${facture.totalHT.toStringAsFixed(2)} MAD'),
                       pw.Text('TVA (20%) : ${(facture.totalHT * 0.2).toStringAsFixed(2)} MAD'),
-                      pw.Text('Total TTC : ${facture.totalTTC.toStringAsFixed(2)} MAD'),
+                      pw.Text('Total TTC : ${facture.totalTTC.toStringAsFixed(2)} MAD',
+                          style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       pw.SizedBox(height: 8),
                       pw.Text('Montant en lettres :', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                       pw.Text(montantEnLettres),
