@@ -147,10 +147,10 @@ class FactureService {
                 ),
                 cellAlignment: pw.Alignment.centerLeft,
                 columnWidths: {
-                  0: const pw.FlexColumnWidth(1.5), // Référence
-                  1: const pw.FlexColumnWidth(3),   // Produit
+                  0: const pw.FlexColumnWidth(2),   // Produit
+                  1: const pw.FlexColumnWidth(2.5), // Référence
                   2: const pw.FlexColumnWidth(1.5), // Prix HT
-                  3: const pw.FlexColumnWidth(1),   // Quantité
+                  3: const pw.FlexColumnWidth(1.5),   // Quantité
                   4: const pw.FlexColumnWidth(1.5), // Total HT
                 },
               ),
