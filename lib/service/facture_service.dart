@@ -290,6 +290,11 @@ class FactureService {
       rethrow;
     }
   }
+
+  Future<List<Facture>> getAllFactures() async {
+    final snapshot = await _db.collection('factures').get();
+    return snapshot.docs.map((doc) => Facture.fromMap(doc.data() as Map<String, dynamic>)).toList();
+  }
 }
 
 class GoogleAuthClient extends http.BaseClient {

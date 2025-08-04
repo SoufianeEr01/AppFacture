@@ -543,8 +543,8 @@ class _CreerFactureScreenState extends State<CreerFactureScreen> {
                               ),
                             )
                           : ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
+                              shrinkWrap: false, // Changé de true à false
+                              physics: const AlwaysScrollableScrollPhysics(), // Changé pour permettre le scroll
                               padding: const EdgeInsets.all(12),
                               itemCount: lignesFacture.length,
                               separatorBuilder: (context, index) => const Divider(color: Color(0xFFF5F5F5)),
