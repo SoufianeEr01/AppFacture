@@ -45,24 +45,28 @@ class Facture {
 
 
   factory Facture.fromMap(Map<String, dynamic> map) {
-    print("Map reçue dans Facture.fromMap: $map");
+  print("Map reçue dans Facture.fromMap: $map");
 
-    return Facture(
-      id: map['id'],
-      clientId: map['clientId'],
-      nomClient: map['nomClient'],
-      emailClient: map['emailClient'],
-      iceClient: map['iceClient'],
-      date: DateTime.parse(map['date']),
-      lignes: (map['lignes'] as List)
-    .map((item) => LigneFacture.fromMap(Map<String, dynamic>.from(item)))
-    .toList(),
-      totalHT: (map['totalHT'] as num).toDouble(),
-      totalTTC: (map['totalTTC'] as num).toDouble(),
-      numero: (map['numero'] is int)
-          ? map['numero']
-          : int.tryParse(map['numero'].toString()) ?? 0,
-      pdfUrl: map['pdfUrl'],
-    );
-  }
+  return Facture(
+    id: map['id'],
+    clientId: map['clientId'],
+    nomClient: map['nomClient'],
+    emailClient: map['emailClient'],
+    iceClient: map['iceClient'],
+    date: DateTime.parse(map['date']),
+    lignes: (map['lignes'] as List)
+        .map((item) => LigneFacture.fromMap(Map<String, dynamic>.from(item)))
+        .toList(),
+    totalHT: map['totalHT'] is num
+        ? (map['totalHT'] as num).toDouble()
+        : double.tryParse(map['totalHT'].toString()) ?? 0.0,
+    totalTTC: map['totalTTC'] is num
+        ? (map['totalTTC'] as num).toDouble()
+        : double.tryParse(map['totalTTC'].toString()) ?? 0.0,
+    numero: map['numero'] is int
+        ? map['numero']
+        : int.tryParse(map['numero'].toString()) ?? 0,
+    pdfUrl: map['pdfUrl'],
+  );
+}
 }

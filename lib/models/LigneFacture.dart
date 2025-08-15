@@ -30,9 +30,13 @@ class LigneFacture {
     return LigneFacture(
       produitId: map['produitId'] ?? '',
       nomProduit: map['nomProduit'] ?? '',
-      reference: map['reference'] ?? '', // Ajouter ici
-      prixHT: (map['prixHT'] as num).toDouble(),
-      quantite: (map['quantite'] as num).toInt(),
+      reference: map['reference'] ?? '',
+      prixHT: map['prixHT'] is num
+          ? (map['prixHT'] as num).toDouble()
+          : double.tryParse(map['prixHT'].toString()) ?? 0.0,
+      quantite: map['quantite'] is int
+          ? map['quantite']
+          : int.tryParse(map['quantite'].toString()) ?? 0,
     );
   }
 }
