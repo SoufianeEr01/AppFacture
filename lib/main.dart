@@ -9,6 +9,7 @@ import '../ClientScreen/client_screen.dart';
 import '../Facture/CreerFactureScreen.dart';
 import '../Facture/FactureDriveScreen.dart';
 import 'Reporting/screen_dashbord.dart';
+import 'bon_commande/bon_commande_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -44,6 +45,7 @@ class MyApp extends StatelessWidget {
         '/auth': (context) => const AuthScreen(),
         '/historiqueFacture': (context) => const FactureDriveScreen(),
         '/statistiques': (context) => DashboardScreen(),
+        '/bonCommande': (context) => const BonCommandeScreen(),
       },
     );
   }

@@ -5,13 +5,14 @@ publish_to: 'none' # Ce projet n'est pas destiné à être publié sur pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.8.1
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+
   # Formatage dates et nombres
   intl: ^0.20.0
 
@@ -24,33 +25,46 @@ dependencies:
   fluttertoast: ^8.2.1
 
   # Firebase
-  firebase_core: ^3.15.0
-  firebase_auth: ^5.6.1
-  google_sign_in: ^6.1.5
-  cloud_firestore: ^5.6.10
-  firebase_storage: ^12.4.8
+  firebase_core: ^3.5.0
+  firebase_auth: ^5.3.0
+  google_sign_in: ^6.2.1
+  cloud_firestore: ^5.4.4
+  firebase_storage: ^12.3.2
 
-  
   # PDF & fichiers
   pdf: ^3.10.5
   path_provider: ^2.1.2
   uuid: ^4.2.1
+  pdfx: ^2.6.0
 
   # Google APIs
   googleapis: ^13.1.0
+  googleapis_auth: ^1.5.1
   http: ^1.1.0
-  # Share et ouverture de fichiers
+
+  # Partage et ouverture de fichiers
   share_plus: ^10.0.2
   open_file: ^3.3.2
-  
+
   # Import/Export CSV et Excel
   file_picker: ^8.1.2
   csv: ^6.0.0
   excel: ^4.0.3
 
+  # PDF processing pour OCR
+  syncfusion_flutter_pdf: ^30.2.5
+  # Image processing
+  image: ^4.1.7
+  # OCR Text Recognition
+  google_mlkit_text_recognition: ^0.15.0
+
+  # Scanner et permissions
   mobile_scanner: ^3.5.6
   permission_handler: ^11.0.1
   fl_chart: ^0.66.0
+
+  # Caméra
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
@@ -69,3 +83,6 @@ flutter:
   assets:
     - assets/logo.png
     - assets/Logo_app.png
+    - assets/logo_Innovpal.png
+    - assets/fonts/Inter-Regular.ttf
+    - assets/fonts/Inter-Bold.ttf
